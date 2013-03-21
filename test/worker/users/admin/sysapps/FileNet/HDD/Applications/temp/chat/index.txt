@@ -1,0 +1,160 @@
+thisis[actT.x].get = function (urlc, callback) {
+	urla = 'proxy.php'+'?'+'url='+encodeURIComponent(urlc)+'&mode=native&full_headers=1';
+        if(window.XMLHttpRequest){
+	var getx = new XMLHttpRequest();
+        window.getx = getx;
+        } else {
+        var getx = new ActiveXObject("Microsoft.XMLHTTP");
+        window.getx = getx;
+        };
+	getx.open('get', urla, true);
+ 	getx.onreadystatechange = function() {
+		if (getx.readyState==4) {
+			var datad = getx.responseText;
+			//window.data=JSON.parse(datad);
+                        //if (data.messages && window.login == 'false') {                        
+			window.parsed = JSON.parse(datad);
+			if (!window.token) {
+				window.token = parsed.token;
+			} ;
+                        if (window.login == 'true') {
+			window.parsedu = JSON.parse(datad);
+                        window.userdiv = document.getElementById('users');
+                        for (var i=0; i < parsedu.users.length; i++) {
+                             userdiv.innerHTML+='<font class="users">'+parsedu.users[i].username+'</font>';
+                             if (parsed.users[i].username == 'BOT') {
+                                 window.BOT = 'true';
+                             };
+                        };
+                        if (window.BOT.login) {
+                            //window.BOTtoken = parsed.token;
+                        };
+                        if (window.BOT == 'false') {
+                        window.temptoken = window.token;
+                        getbot("amoeba.im/api/login?username=BOT");
+                        window.BOT = 'true';
+                        };
+                        };
+			if (parsed.username && parsed.username != 'BOT') {
+				window.username = parsed.username;
+			};
+			//if (!window.time) {
+				window.time = parsed.time;
+			//};
+			if (window.login == 'false' && parsed.messages) {
+			//if (window.login == 'false') {
+			for (var i=0; i < parsed.messages.length; i++) {
+			if (parsed.messages[i].message.substr(0, 7) == 'http://') {
+				window.divm = document.createElement('tr');
+				divm.style.cssText = 'border-top:1px solid black;position:relative;width:100%;height:auto;top:0px;left:0px;font-size:10;';
+				divm.innerHTML='<td style="border-right:1px solid black;text-align:right;width:12em;"><font style="text-align:right;">'+parsed.messages[i].from+'</font></td>';
+                                var a = document.createElement('a');
+                                a.href = parsed.messages[i].message;
+                                a.target = '_blank';
+                                a.innerText = parsed.messages[i].message;
+                                divm.appendChild(a);
+				document.getElementById('paste').appendChild(divm);
+				//window.time=parsed.time;
+				//document.getElementById('pastediv').scrollTop = document.getElementById('paste').scrollHeight;
+                                if (parsed.messages[i].message.substr((parsed.messages[i].message.length-3), parsed.messages[i].message.length) == 'png' || parsed.messages[i].message.substr((parsed.messages[i].message.length-3), parsed.messages[i].message.length) == 'jpg' || parsed.messages[i].message.substr((parsed.messages[i].message.length-3), parsed.messages[i].message.length) == 'gif' || parsed.messages[i].message.substr((parsed.messages[i].message.length-3), parsed.messages[i].message.length) == 'jepg' || parsed.messages[i].message.substr((parsed.messages[i].message.length-3), parsed.messages[i].message.length) == 'svg') {
+			//window.divm = document.createElement('tr');
+			//divm.style.cssText = 'border-top:1px solid black;position:relative;width:100%;height:auto;top:0px;left:0px;font-size:10;';
+                        var img = document.createElement('img');
+                        img.src = parsed.messages[i].message;
+                        img.style.cssText = 'width:100px;height=100px;';
+			divm.appendChild(img);
+			//document.getElementById('paste').appendChild(divm);
+			window.time=parsed.time;
+			document.getElementById('pastediv').scrollTop = document.getElementById('paste').scrollHeight;
+			} else if (parsed.messages[i].message.substr(0, 14) == 'http://youtube' || parsed.messages[i].message.substr(0, 18) == 'http://www.youtube') {
+			//window.divm = document.createElement('tr');
+			//divm.style.cssText = 'border-top:1px solid black;position:relative;width:100%;height:auto;top:0px;left:0px;font-size:10;';
+                        var iframe = document.createElement('iframe');
+                        iframe.src = 'http://youtube.com/embed/'+parsed.messages[i].message.substr(31, parsed.messages[i].message.length);
+			divm.appendChild(iframe);
+			//document.getElementById('paste').appendChild(divm);
+			window.time=parsed.time;
+			document.getElementById('pastediv').scrollTop = document.getElementById('paste').scrollHeight;
+                        };
+			} else {
+				window.divm = document.createElement('tr');
+				divm.style.cssText = 'border-top:1px solid black;position:relative;width:100%;height:auto;top:0px;left:0px;font-size:10;';
+				divm.innerHTML='<td style="border-right:1px solid black;text-align:right;width:12em;">'+parsed.messages[i].from+' </td>';
+                                divm.appendChild(document.createTextNode(parsed.messages[i].message));
+				document.getElementById('paste').appendChild(divm);
+				window.time=parsed.time;
+				document.getElementById('pastediv').scrollTop = document.getElementById('paste').scrollHeight;
+                        };
+			};
+                        //delete window.parsed.messages;
+                        window.finish = 'true';
+			};
+                        window.messaging = 'false';
+//if (window.token) {
+				if (window.history == 'true') {
+					//get('amoeba.im/api/Messages?token='+token+'&since='+new Date().getTime()+'&history=true');
+					window.history = 'false';
+					window.login = 'false';
+					window.messaging = 'false';
+                                        startMessagePolling();
+				}
+                                if (window.history == 'false' && window.finish == 'true') {
+                                       // console.log('api/messages', parsed.success, parsed.messages);
+                                        window.this_time = new Date().getTime();
+                                        //window.tempurl = 
+                                        //window.this_time = parsed.time;
+					//setTimeout("get('amoeba.im/api/Messages?token='+token+'&since='+parsed.time+'&history=false');", 5);
+					//setTimeout("window.finish = 'false';get('amoeba.im/api/messages?token='+encodeURIComponent(window.token)+'&since='+window.this_time);", 5);
+					//get('amoeba.im/api/Messages?token='+token+'&since='+parsed.time);
+					window.login = 'false';
+					window.messaging = 'false';
+                                        //window.finish = 'false';
+				};
+			//};
+                        if(callback) {
+                               callback(this);
+                        };
+		};
+	};
+	getx.send();
+                window.pollingit = 'false';
+};
+thisis[actT.x].processit = function() {
+
+                if (thisis[actT.x].input.value == '/quit') {
+			window.login = 'true';
+			get("amoeba.im/api/logout?token="+encodeURIComponent(window.token));
+                        stopMessagePolling();
+                        //sendm("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent(window.username+' has left the chat room')+"&token="+window.BOTtoken);
+			//window.login = 'false';
+			//delete window.token;
+		};
+		if (!window.login)  {
+			window.login = 'true';
+                        window.isMessagePolling = false
+			get("amoeba.im/api/login?username="+thisis[actT.x].input.value);
+			thisis[actT.x].input.value = '';
+			setTimeout('get("amoeba.im/api/rooms/join?room="+encodeURIComponent(\'#lobby\')+"&token="+encodeURIComponent(token))', 1000);
+			window.history = 'true';
+			window.loggedin = 'true';
+                        //startMessagePolling();
+                        cookie.set("authusername", window.parsed.username);
+		} else if (window.loggedin=='true')  {
+			window.messaging = 'true';
+                        //window.getx.abort();
+			sendm("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent(thisis[actT.x].input)+"&token="+token);
+			thisis[actT.x].input.value = '';
+		};
+};
+thisis[actT.x].input = document.createElement('input');
+thisis[actT.x].input.style.cssText = 'position:absolute;bottom:0px;width:auto;left:0px;right:0px;height:20px;'
+thisis[actT.x].input.type = 'text';
+Doc.appendChild(thisis[actT.x].input);
+window.addEventListener('keypress', function(event) {
+if (event.target==thisis[actT.x].input) {
+	if (event.keyCode==13) {
+            thisis[actT.x].processit();
+            //alert(thisis[actT.x].input.value);
+	};
+};
+}, true);

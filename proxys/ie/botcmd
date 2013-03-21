@@ -1,0 +1,77 @@
+if (message.from == 'system') {
+                            if(message.split(" ")[1] == 'disconnected.') {
+                                  for (var b=0; b < window.userdiv.children.length; b++) {
+                                       if (window.userdiv.children[b].innerHTML == window.message.split(" ")[0]) {
+                                            //sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent(window.message.split(' ')[0]+' has left the chat room')+"&token="+token);
+                                            window.userdiv.removeChild(window.userdiv.children[b]);
+                                       }
+                                   }
+                            } else if(message.split(" ")[1] == 'joined' && message.split(" ")[0] != window.username) {
+                                     if (message.split(' ')[0] != 'jason') {
+                                     //sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent(window.message.split(' ')[0]+' has joined the chat room')+"&token="+token);
+                                     } else {
+                                     //sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent('the jason-king has joined the chat room')+"&token="+token);
+                                     };
+                                     window.userdiv.innerHTML+='<font class="users">'+window.message.split(" ")[0]+'</font>';
+                            }
+                        }
+                                 if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'identify') {
+                        //registerbot(message.message.split(' ')[1], message.message.split(' ')[2]);
+                        window.tempmsg = message.from;
+                        var identify = new XMLHttpRequest();
+                               var identifyd = 'user='+message.from+'&pass='+message.message.split(' ')[2];
+                               identify.open('POST', 'sign.php', true);
+                               identify.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                               identify.onreadystatechange = function() {
+                               if (identify.readyState==4) {
+                                       var responsetext = identify.responseText;
+                                       var load = responsetext;
+                                      //if(identify.responseText == "success") {
+                                      sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent('/msg '+window.tempmsg+' success '+identify.responseText+' '+users)+"&token="+token);
+                                      for (var t=0; t < users.length; t++) {
+                                      if(window.tempmsg == users[t][0]) {
+                                         var newuser = true;
+                                      };
+                                      };
+                                      if (!newuser && identify.responseText.length > 0) {
+                                          users.push([window.tempmsg, load]);
+                                      };
+                                      //};
+                               };
+                               };
+                               identify.send(identifyd);
+                        };
+                                for (var f=0; f < users.length; f++) {
+					if (message.from == users[f][0]) {
+                        if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'register' && users[f][1] == 9) {
+                        //registerbot(message.message.split(' ')[1], message.message.split(' ')[2]);
+                        var register = new XMLHttpRequest();
+                               var registerd = 'user='+message.message.split(' ')[1]+'&pass='+message.message.split(' ')[2]+'&level='+message.message.split(' ')[3];
+                               register.open('POST', 'register.php', true);
+                               register.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                               register.onreadystatechange = function() {
+                               if (register.readyState==4) {
+                                      sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent('/msg James success '+register.responseText)+"&token="+token);
+                               };
+                               };
+                               register.send(registerd);
+                        } else if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'pm' && users[f][1] == 9) {
+                            sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent('/msg '+message.message.split(' ')[1]+message.message.substr(message.message.indexOf(",") + 1))+"&token="+token);
+                        } else if ((message.message.split(' ')[0] == 'bye' && message.message.split(' ')[1] == 'BOT') || (message.message.split(' ')[0] == 'bye' && message.message.split(' ').length == 1) || (message.message.split(' ')[0] == 'bye!' && message.message.split(' ').length == 1)) {
+                          sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent('bye '+message.from)+"&token="+token);
+                        } else if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'java,' && users[f][1] == 9) {
+                        eval(message.message.substr(message.message.indexOf(",") + 1));
+                        } else if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'join' && users[f][1] == 9) {
+                        get("amoeba.im/api/rooms/join?room="+encodeURIComponent(message.message.split(' ')[1])+"&token="+encodeURIComponent(token)+"");
+                        } else if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'say' && users[f][1] == 9) {
+                        window.tempmesg = message;
+                            sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent(message.message.split(' ')[1])+"&message="+encodeURIComponent(message.message.substr(message.message.indexOf(",") + 1))+"&token="+token);
+                        } else if (message.to == 'BOT' && message.type == 'pm' && message.message.split(' ')[0] == 'quit' && users[f][1] ==9) {
+                        window.tempmesg = message;
+                            get("amoeba.im/api/logout?token="+encodeURIComponent(token));
+                            stopbotPolling();
+                        } else if (message.message.split(' ')[0] == '!calc' && users[f][1] == 9) {
+                          sendbot("amoeba.im/api/postMessage?room="+encodeURIComponent('#lobby')+"&message="+encodeURIComponent(message.message.substr(6)+'='+parseInt(calculate(message.message.substr(6))))+"&token="+token);
+                        };
+                        };
+};

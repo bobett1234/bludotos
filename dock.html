@@ -1,0 +1,181 @@
+<html>
+<head>
+<style>
+html, body {
+    height: 100%;
+}
+body {
+    background-image: url(http://www.focalpointgraphicdesign.com/blog/wp-content/uploads/2009/10/Fancy-Background3.jpg);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+}
+#dachsund {
+    position: fixed;
+    bottom: 0;
+    height: auto;
+    width: auto;
+    left:50%;
+    padding: 5px 5px 2px 5px;
+    -webkit-transform-origin: 50% 100%;
+}
+.docklet {
+    -webkit-transition: linear 0.3s all;
+    position:absolute;
+    top:100%;
+    bottom: 0px;
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    background-size: 100% 100%;
+    position: relative;
+    float: left;
+    whitespace: nowrap;
+}
+.docklets {
+    white-space: nowrap;
+    
+}
+#dockletsR {
+    white-space: nowrap;
+    
+}
+.dockletR {
+    position:absolute;
+    bottom: 0;
+    width: 64px;
+    height: 64px;
+    display: inline-block;
+    background-size: 100% 100%;
+    position: relative;
+    float: left;
+    whitespace: nowrap;
+}
+.docklet div.label {
+    position: absolute;
+    height: 20px;
+    background: hsla(0, 100%,0%, 0.4);
+    border-radius: 50px;
+    top: -30px;
+    color: white;
+    padding-left: 5px;
+    padding-right: 5px;
+    left: 50%;
+    text-shadow: 0 2px 3px black;
+    opacity: 0;
+    -webkit-transition: linear 0.1s all;
+    white-space: nowrap;
+}
+.docklet div.label:after {
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    border: 5px solid transparent;
+    border-top-color:  hsla(0, 100%,0%, 0.4);
+    bottom: -10px;
+    left: 50%;
+    margin-left: -5px;
+}
+.docklet:hover div{
+    opacity: 1;
+}
+* {
+    font-family: helvetica;
+}
+//.docklet:hover {
+//        bottom:36px;
+//	width:100px;
+//	height:100px;
+//}
+#dachsundCenter {
+    position:absolute;
+    bottom:0px;
+    width:100%;
+    height:50%;
+    background: url('http://vios.tk/images/dock-centre-80.png');
+}
+#dachsundRight {
+    position:absolute;
+    bottom:0px;
+    left:100%;
+    height:50%;
+    width:4%;
+    background: url('http://vios.tk/images/dock-right-80.png');
+}
+#dachsundLeft {
+    position:absolute;
+    bottom:0px;
+    left:-3%;
+    height:50%;
+    width:4%;
+    background: url('http://vios.tk/images/dock-left-80.png');
+}
+.dockleti {
+    position:relative;
+    width:100%;
+    height:84%;
+}
+</style>
+<script>
+var Dachsund = function(){
+    this.el = document.querySelector("#dachsund");
+    this.docklets = this.el.querySelector(".docklets");
+    window.addEventListener("resize", this.resizer(this), false);
+};
+Dachsund.prototype.createDocklet = function(name, icon){
+    var docklet = document.createElement("div");
+    docklet.className="docklet";
+    //docklet.style.backgroundImage = ["url(", icon, ")"].join('');
+    var dockletIcon = document.createElement("img");
+    dockletIcon.className="dockleti";
+    dockletIcon.src = icon;
+    var dockletLight = document.createElement('div');
+    dockletLight.style.cssText = 'position:relative;top:3px;left:25%;right:25%;background:transparent;width:50%;height:15%;border-radius:5px;';
+    
+    var dockletLabel= document.createElement("div");
+    dockletLabel.innerHTML = name;
+    docklet.appendChild(dockletIcon);
+    docklet.appendChild(dockletLabel);
+    docklet.appendChild(dockletLight);
+    this.docklets.appendChild(docklet);
+    this.el.style.marginLeft = -(this.el.clientWidth/2)+"px";
+    dockletLabel.className="label";
+    dockletLabel.style.marginLeft = -(dockletLabel.clientWidth/2) +"px";
+    this.resizer(this)();
+    docklet.onclick = function(docklet){Dachsund.prototype.setLight(this.children[2]);};
+};
+Dachsund.prototype.setLight = function(dockL) {
+    //dockL.style.background = 'rgba(44, 44, 44, 0.5)';
+        dockL.style.background = '-webkit-radial-gradient(center, white, blue, darkblue, transparent, transparent, transparent)';
+};
+Dachsund.prototype.resizer = function(t){
+        return function(){
+            if(window.innerWidth < t.el.clientWidth+100){
+                t.el.style.webkitTransform = ["scale(", 
+                                              window.innerWidth/ (t.el.clientWidth+100), ")"].join('');
+            }
+        };
+    };
+function dockcreate(){
+x = new Dachsund();
+x.createDocklet("Finder","http://fc08.deviantart.net/fs70/i/2011/105/4/a/rounded_finder_icon_by_mehhbud-d3e3dkz.png");
+for(var i = 0; i < 10; i++)
+x.createDocklet("Google Chrome", "http://4.bp.blogspot.com/-SAlsUK_Hwkw/TYGj8pt-kbI/AAAAAAAAAqE/blsfUwJWdbU/s1600/Google%2BChrome%2Bicon%2Bnew.png");
+};
+//reflectedIconNodes[index].setAttribute('src',
+        //imageDetails[index].name
+            //+ imageDetails[index].sizes[sizeIndex]
+            //+ '-reflection'
+            //+ imageDetails[index].extension);
+</script>
+</head>
+<body onload="dockcreate();">
+    <div id="dachsund">
+    <div id="dachsundLeft"></div>
+    <div id="dachsundCenter"></div>
+    <div id="dachsundRight"></div>
+    <div class="docklets"></div>
+        <div id="dockletsR"></div>
+    </div>
+</body>
+</html>
