@@ -335,177 +335,61 @@ last.type = 'submit';
 div.form.appendChild(last);
 div.form.children[1].focus();
 },
-Notify:(function () {
-	var notify_enable_queue = false,
-		notifydialogs = {},
-		notifydialog_queue = [],
-		notifydialogIndex = 0,
-		notifydialog_removingSpeed = 0,
-		notifydialog_opendialogs = 0,
-		notifydialogs_oldlatest = null,
-		w = window.innerWidth,
-		h = window.innerHeight;
-	
-	function moveNotify(id,dir) {
-		var d = notifydialogs[id];
-		if(!d) return false;
-		d._dir = dir;
-		var newPos = (dir==1 && notifydialog_removingSpeed>0) ? d._lastPos : (d._lastPos + (d._dir*d._speed)),
-			realNewPos = Math.round((newPos-d._startPos)/d.offsetHeight * (0+d.offsetHeight) + d._startPos);
-		
-		d.style[("leftright").replace(d._halign,"")] = "auto";
-		d.style[("topbottom").replace(d._valign,"")] = "auto";
-		d.style[d._halign] = "0px";
-		d.style[d._valign] =  realNewPos + "px";
-		
-		if(d._dir==-1) {
-			var o;
-			for(var x in notifydialogs) {
-				o = notifydialogs[x];
-				if(o!=d && o._dir==0 && o._index>d._index && o._deleted!=true && o._valign==d._valign && o._halign==d._halign) {
-					o._lastPos += d._dir*d._speed;
-					o._startPos += d._dir*d._speed;
-					if(o._lastPos < o._startPos)
-						o._lastPos = o._startPos;
-					o.style[o._valign] = o._lastPos + "px";
-				}
-			}
-		}
-		
-		if(dir==1 && newPos >= d._startPos+d.offsetHeight) {
-			try{ window.clearInterval(d._timer); }catch(e){}
-			d.style[d._valign] = realNewPos + "px";
-			d._waitOpen = window.setInterval(function() {
-				notifydialogs[d._id].Close();
-			}, Math.round(d._wait*1000));
-			d._dir = 0;
-			d.className = d.className.replace(" opening","").replace(" underhalfopen","").replace(" halfopen","") + " latest";
-			notifydialogs_oldlatest = d._id;
-			for(var x in notifydialogs)
-				if(x!=d._id && notifydialogs[x]._valign==d._valign && notifydialogs[x]._halign==d._halign)
-					notifydialogs[x].className = notifydialogs[x].className.replace(" latest","").replace(" underhalfcovered","").replace(" halfcovered","");
-		}
-		else if(dir==1 && Math.abs(d._lastPos - d._startPos - d.offsetHeight/2)<=d._speed && notifydialogs_oldlatest && notifydialogs[notifydialogs_oldlatest]) {
-			notifydialogs[notifydialogs_oldlatest].className = notifydialogs[notifydialogs_oldlatest].className.replace(" latest","").replace(" underhalfcovered","").replace(" halfcovered","") + " halfcovered";
-			d.className = d.className.replace(" underhalfopen","").replace(" halfopen","") + " halfopen";
-		}
-		else if(dir==-1 && (newPos < d._startPos || newPos<-d.offsetHeight)) {
-			try{ window.clearInterval(d._timer); }catch(e){ d._timer=null; }
-			d.parentNode.removeChild(d);
-			delete notifydialogs[d._id];
-			notifydialog_removingSpeed = 0;
-			notifydialog_opendialogs--;
-			if(notifydialog_opendialogs==0)
-				window.setTimeout(notifydialog_processQueue, 100);
-		}
-		d._lastPos = newPos;
-	};
-	
-	function notifydialog_processQueue() {
-		var n;
-		for(var i=0; i<notifydialog_queue.length; i++) {
-			n = notifydialog_queue[i];
-			notifydialog_hold = false;
-			System.Notify(n.text,n.secondsToStayOpen,n.vertical_align,n.horizontal_align,n.speed);
-			notifydialog_hold = false;
-		}
-		notifydialog_hold = true;
-		notifydialog_queue = [];
-	};
-	
-	return function( text, secondsToStayOpen, vertical_align, horizontal_align, speed, onclick ){
-		if(notify_enable_queue==true && notifydialog_hold==true) {
-			notifydialog_queue.push({
-				"text" : text ,
-				"secondsToStayOpen" : secondsToStayOpen ,
-				"vertical_align" : vertical_align || "bottom",
-				"horizontal_align" : horizontal_align || "right",
-				"speed" : speed
-			});
-			return "queued";
-		}
-		var d = document.createElement("div");
-		if(onclick && onclick.constructor && onclick.constructor==Function) {
-			d.onclick = onclick;
-		}
-		d._id = Math.floor(Math.random()*99999999999999999);
-		d._index = notifydialogIndex++;
-		d.className = "notifydialog";
-
-		d.innerHTML = (text||'').replace(/<(\/?(script|iframe|frame|style|[a-z0-9]+\:))/gim,'&lt;$1').replace(/<([a-z][a-z0-9\:]*)(\s.*?)>/gim,function(str,type,attr){
-			var r = "<"+type;
-			r += (attr||'').replace(/\son[a-z0-9]*?\s*=\s*(['"]).*?\1/gim,'');
-			return r + ">";
-		});
-		document.body.appendChild(d);
-		d.style.visibility = "hidden";
-		d.style.position = "absolute";
-		d.style.display = "block";
-		notifydialogs[d._id] = d;
-		notifydialog_latest = d._id;
-		
-		d.Close = function() {
-			if(this._mouseover==true)
-				return false;
-			var d = this;
-			d._deleted = true;
-			try{ window.clearInterval(d._waitOpen); }catch(e){}
-			d._timer = window.setInterval(function() {
-				moveNotify(d._id, -1);
-			},20);
-			d.className += " removing";
-			notifydialog_removingSpeed = d._speed;
-			var o;
-			for(var x in notifydialogs) {
-				o = notifydialogs[x];
-				if(o!=d && o._dir==0 && o._index>d._index && o._valign==d._valign && o._halign==d._halign)
-					o._startPos -= d.offsetHeight;
-			}
-		};
-		
-		d._speed = (speed===null || speed===undefined) ? 2 : speed;
-		d._valign = ((["top","bottom"]).indexOf(vertical_align)<0) ? ((d.offsetTop<h/2)?"top":"bottom") : vertical_align;		// Default align from CSS: left:0px,right:0px,top:0px, or bottom:0px
-		d._halign = ((["left","right"]).indexOf(horizontal_align)<0) ? ((d.offsetLeft<w/2)?"left":"right") : horizontal_align;
-		d._wait = (secondsToStayOpen===null || secondsToStayOpen===undefined) ? 5 : secondsToStayOpen;
-		d._dir = 1;
-		d.className = "notifydialog "+d._valign+" "+d._halign+" opening underhalfopen outermost";
-		
-		for(var x in notifydialogs)
-			if(x!=d._id && notifydialogs[x]._valign==d._valign && notifydialogs[x]._halign==d._halign)
-				notifydialogs[x].className = notifydialogs[x].className.replace(" outermost","");
-		
-		if(notifydialogs_oldlatest && notifydialogs[notifydialogs_oldlatest])
-			notifydialogs[notifydialogs_oldlatest].className = notifydialogs[notifydialogs_oldlatest].className.replace(" latest","").replace(" underhalfcovered","").replace(" halfcovered","") + " underhalfcovered";
-		
-		d._startPos = -d.offsetHeight;
-		for(var x in notifydialogs)
-			if(x!=d._id && notifydialogs[x]._dir>=0 && notifydialogs[x]._valign==d._valign && notifydialogs[x]._halign==d._halign)
-				d._startPos += notifydialogs[x].offsetHeight;
-		d._lastPos = d._startPos;
-		
-		d.style[("leftright").replace(d._halign,"")] = "auto";
-		d.style[("topbottom").replace(d._valign,"")] = "auto";
-		d.style[d._halign] = "0px";
-		d.style[d._valign] = (d._startPos - d.offsetHeight) + "px";
-		d.style.visibility = "visible";
-		d._timer = window.setInterval(function() {
-			moveNotify(d._id, 1);
-		}, 2);
-		
-		notifydialog_hold = true;
-		notifydialog_opendialogs++;
-		return true;
-	};
-}()),
-dockmag:function(user, change) {
-var wall = new XMLHttpRequest();
-	wall.open('GET', 'users/'+user+'/sysapps/Preferences/dconf.php?user='+user+'&change='+change, true);
-	wall.onreadystatechange = function() {
-		if (wall.readyState==4) {
-		//alert(wall.responseText);
-		};
-	};
-wall.send();
+Notify:function(itext, src, duration) {
+if(!src) {
+var src = 'wallpaper/BluDotlogo.png';
+};
+if(!duration) {
+var duration = 2;
+};
+if(!itext) {
+var itext = '';
+};
+  if(document.getElementsByClassName('notifymain').length == 1) {
+  var len = document.getElementsByClassName('notifymain').length;
+    var main = document.createElement('div');
+  main.id = 'notifymain';
+  main.className = 'notifymain';
+  main.style.top = (document.getElementsByClassName('notifymain')[0].clientHeight+5)+30+'px';
+  document.body.appendChild(main);
+  main.style['-webkit-transition'] = 'top 1s';
+    main.style.MozTransition = 'top 1s';
+  } else if(document.getElementsByClassName('notifymain').length > 1) {
+  var len = document.getElementsByClassName('notifymain').length;
+    var main = document.createElement('div');
+  main.id = 'notifymain';
+  main.className = 'notifymain';
+  main.style.top = (document.getElementsByClassName('notifymain')[len-1].clientHeight*(document.getElementsByClassName('notifymain').length))+5*(document.getElementsByClassName('notifymain').length)+30+'px';
+  document.body.appendChild(main);
+  main.style['-webkit-transition'] = 'top 1s';
+    main.style.MozTransition = 'top 1s';
+} else if(document.getElementsByClassName('notifymain').length == 0) {
+  var main = document.createElement('div');
+  main.id = 'notifymain';
+  main.className = 'notifymain';
+  main.style.top = 30+'px';
+  document.body.appendChild(main);
+  main.style['-webkit-transition'] = 'top 1s';
+  main.style.MozTransition = 'top 1s';
+};
+  main.innerHTML = '<div id="notifylogo"><img class="notifylogo" src="'+src+'" /></div><div id="notifycontent"><font class="notifytext"></font></div></div>';
+  var text = main.children[1].children[0];
+text.innerHTML = itext;
+  main.style.right=-300+'px';
+var run = setInterval(
+    function(){
+    main.style.right=(parseInt(main.style.right)+10)+'px';
+      if(parseInt(main.style.right) == 10) {
+        setTimeout(function(){
+          var endit = [];
+          for(var k=0; k < document.getElementsByClassName('notifymain').length; k++) {
+        document.getElementsByClassName('notifymain')[k].style.top = parseInt(document.getElementsByClassName('notifymain')[k].offsetTop)-main.clientHeight+'px';
+          };
+          document.body.removeChild(main);
+        }, duration*1000);
+        clearInterval(run);
+      };
+    }, 1);
 }
 };
 window.addEventListener('contextmenu', function (e){MainTools.desktopRightClick(e);}, false);

@@ -1,9 +1,0 @@
-
-RewriteEngine on
-# mime type                     extension
-AddType text/cache-manifest .manifestRewriteCond %{HTTP_REFERER} !^http://admin.vios.tk/.*$      [NC]
-AddType text/cache-manifest .manifest
-RewriteCond %{HTTP_HOST} ^apfelsineos\.tk$ [OR]
-RewriteCond %{HTTP_HOST} ^www\.apfelsineos\.tk$
-RewriteRule ^/?$ "http\:\/\/vios\.tk" [R=301,L]
-

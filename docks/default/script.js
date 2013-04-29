@@ -1,23 +1,26 @@
 function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height, speed, skip){
     
+    SimpleDock.prototype.max = maximumSize;
+    SimpleDock.prototype.min = minimumSize;
     // create a container for the icons and add it to the dock container
     var iconsNode = document.createElement('div');
     node.appendChild(iconsNode);
-    node.style.top = maximumSize-(height*2)-3+'px';
+    node.style.top = SimpleDock.prototype.max-(height*2)-3+'px';
     this.node = node.parentNode;
     // create a container for the reflected icons and add it to the dock container
     var reflectedIconsNode = document.createElement('div');
     node.appendChild(reflectedIconsNode);
-    
     // set the icon containers to centre its contents
     iconsNode.style.textAlign          = 'center';
-    iconsNode.style.marginTop = -(maximumSize+minimumSize)+'px';
+    iconsNode.style.marginTop = -(SimpleDock.prototype.max+SimpleDock.prototype.min)+'px';
     reflectedIconsNode.style.textAlign = 'center';
     reflectedIconsNode.style.marginTop  = 0 + 'px';
     
     // set the height of the dock containers to equal that of the maximised icons
-    iconsNode.style.height  = minimumSize + 'px';
-    reflectedIconsNode.style.height  = minimumSize + 'px';
+
+
+    iconsNode.style.height  = SimpleDock.prototype.min + 'px';
+    reflectedIconsNode.style.height  = SimpleDock.prototype.min + 'px';
     
     // initialise the maximum width to 0
     var maximumWidth  = 0;
@@ -25,7 +28,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
     // initialise the scale factor to 0
     var scale  = 0;
     var scale2 = 0;
-    var size3 = minimumSize;
+    var size3 = SimpleDock.prototype.min;
     var size2 = 0;
     window.docklock = false;
     SimpleDock.prototype.skip= skip;
@@ -58,12 +61,16 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
      * index - the 0-based index of the image to be sized
      */
     SimpleDock.prototype.updateIconPropertiesa = function(index){
-        iconNodes[index].style.top = -(maximumSize-minimumSize)+'px';
+    	iconsNode.style.height  = SimpleDock.prototype.min + 'px';
+    reflectedIconsNode.style.height  = SimpleDock.prototype.min + 'px';
+    	node.style.top = SimpleDock.prototype.max-(height*2)-3+'px';
+    	iconsNode.style.marginTop = -(SimpleDock.prototype.max+SimpleDock.prototype.min)+'px';
+        iconNodes[index].style.top = -(SimpleDock.prototype.max-SimpleDock.prototype.min)+'px';
         label[index].style.marginLeft = (iconNodes[index].offsetLeft-20+((iconNodes[index].clientWidth-label[index].clientWidth)/2))+'px';
         // set the leftoffset of dock
         document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
         // determine the size for the icon, taking into account the scale factor
-        var size = minimumSize + scale * (iconSizes[index] - minimumSize);
+        var size = SimpleDock.prototype.min + scale * (iconSizes[index] - SimpleDock.prototype.min);
         // find the index of the appropriate image size
         var sizeIndex = 0;
         while (imageDetails[index].sizes[sizeIndex] < size
@@ -72,7 +79,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         }
         
         // check whether the full icon with its caption should be displayed
-        if (size == maximumSize){
+        if (size == SimpleDock.prototype.max){
             
             // set the src attribute of the image for the icon
             iconNodes[index].setAttribute('src',
@@ -102,8 +109,8 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         reflectedIconNodes[index].setAttribute('height', size);
         
         // set the top margin of the image for the icon
-        iconNodes[index].style.marginTop = (maximumSize - size) + 'px';
-        reflectedIconNodes[index].style.marginBottom = (maximumSize - size) + 'px';
+        iconNodes[index].style.marginTop = (SimpleDock.prototype.max - size) + 'px';
+        reflectedIconNodes[index].style.marginBottom = (SimpleDock.prototype.max - size) + 'px';
         reflectedIconNodes[index].style.marginTop = height+'px';
         
     }
@@ -118,12 +125,12 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
      * index - the 0-based index of the image to be sized
      */
     SimpleDock.prototype.updateIconPropertiesr = function(index){
-        iconNodes[index].style.top = -(maximumSize-minimumSize)+'px';
+        iconNodes[index].style.top = -(SimpleDock.prototype.max-SimpleDock.prototype.min)+'px';
         label[index].style.marginLeft = (iconNodes[index].offsetLeft-20+((iconNodes[index].clientWidth-label[index].clientWidth)/2))+'px';
         // set the leftoffset of dock
         document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
         // determine the size for the icon, taking into account the scale factor
-        var size = minimumSize + scale * (iconSizes[index] - minimumSize);
+        var size = SimpleDock.prototype.min + scale * (iconSizes[index] - SimpleDock.prototype.min);
         // find the index of the appropriate image size
         var sizeIndex = 0;
         while (imageDetails[index].sizes[sizeIndex] < size
@@ -132,7 +139,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         }
         
         // check whether the full icon with its caption should be displayed
-        if (size == maximumSize){
+        if (size == SimpleDock.prototype.max){
             
             // set the src attribute of the image for the icon
             iconNodes[index].setAttribute('src',
@@ -164,12 +171,12 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                                          reflectedIconNodes[index].setAttribute('height', size3);
                                          
                                          // set the top margin of the image for the icon
-                                         iconNodes[index].style.marginTop = (maximumSize - size3) + 'px';
-                                         reflectedIconNodes[index].style.marginBottom = (maximumSize - size3) + 'px';
+                                         iconNodes[index].style.marginTop = (SimpleDock.prototype.max - size3) + 'px';
+                                         reflectedIconNodes[index].style.marginBottom = (SimpleDock.prototype.max - size3) + 'px';
                                          reflectedIconNodes[index].style.marginTop = height+'px';
                                          document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
                                          if (size3 == 0) {
-                                         size3 = minimumSize;
+                                         size3 = SimpleDock.prototype.min;
                                          window.clearInterval(newInterval);
                                          iconsNode.removeChild(label[index]);
                                          iconsNode.removeChild(iconNodes[index]);
@@ -223,12 +230,12 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
      * index - the 0-based index of the image to be sized
      */
     SimpleDock.prototype.updateIconProperties = function(index){
-        iconNodes[index].style.top = -(maximumSize-minimumSize)+'px';
+        iconNodes[index].style.top = -(SimpleDock.prototype.max-SimpleDock.prototype.min)+'px';
         label[index].style.marginLeft = (iconNodes[index].offsetLeft-20+((iconNodes[index].clientWidth-label[index].clientWidth)/2))+'px';
         // set the leftoffset of dock
         document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
         // determine the size for the icon, taking into account the scale factor
-        var size = minimumSize + scale * (iconSizes[index] - minimumSize);
+        var size = SimpleDock.prototype.min + scale * (iconSizes[index] - SimpleDock.prototype.min);
         // find the index of the appropriate image size
         var sizeIndex = 0;
         while (imageDetails[index].sizes[sizeIndex] < size
@@ -237,7 +244,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         }
         
         // check whether the full icon with its caption should be displayed
-        if (size == maximumSize){
+        if (size == SimpleDock.prototype.max){
             
             // set the src attribute of the image for the icon
             iconNodes[index].setAttribute('src',
@@ -269,11 +276,11 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                                          reflectedIconNodes[index].setAttribute('height', size2);
                                          
                                          // set the top margin of the image for the icon
-                                         iconNodes[index].style.marginTop = (maximumSize - size2) + 'px';
-                                         reflectedIconNodes[index].style.marginBottom = (maximumSize - size2) + 'px';
+                                         iconNodes[index].style.marginTop = (SimpleDock.prototype.max - size2) + 'px';
+                                         reflectedIconNodes[index].style.marginBottom = (SimpleDock.prototype.max - size2) + 'px';
                                          reflectedIconNodes[index].style.marginTop = height+'px';
                                          document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
-                                         if (size2 == minimumSize) {
+                                         if (size2 == SimpleDock.prototype.min) {
                                          size2 = 0;
                                          window.clearInterval(newInterval);
                                          } else {
@@ -290,10 +297,15 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
     SimpleDock.prototype.updateIconPropertiest = function(index){
         if (SimpleDock.prototype.skip== false) {
             label[index].style.marginLeft = (iconNodes[index].offsetLeft-20+((iconNodes[index].clientWidth-label[index].clientWidth)/2))+'px';
+if (SimpleDock.prototype.skip== false) {
+            label[index].style.marginTop = -(SimpleDock.prototype.max*2)+20+'px';
+        } else {
+            label[index].style.marginTop = -(SimpleDock.prototype.min*2)-SimpleDock.prototype.min+'px';
+        }
             // set the leftoffset of dock
             document.getElementById('dockContainer').style.left = ((window.innerWidth-document.getElementById('dockContainer').clientWidth)/2)+'px';
             // determine the size for the icon, taking into account the scale factor
-            var size = minimumSize + scale * (iconSizes[index] - minimumSize);
+            var size = SimpleDock.prototype.min + scale * (iconSizes[index] - SimpleDock.prototype.min);
             // find the index of the appropriate image size
             var sizeIndex = 0;
             while (imageDetails[index].sizes[sizeIndex] < size
@@ -302,7 +314,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
             }
             
             // check whether the full icon with its caption should be displayed
-            if (size == maximumSize){
+            if (size == SimpleDock.prototype.max){
                 
                 // set the src attribute of the image for the icon
                 //iconNodes[index].setAttribute('src',
@@ -332,13 +344,13 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
             reflectedIconNodes[index].setAttribute('height', size);
             
             // set the top margin of the image for the icon
-            iconNodes[index].style.marginTop = (maximumSize - size) + 'px';
-            reflectedIconNodes[index].style.marginBottom = (minimumSize - size) + 'px';
+            iconNodes[index].style.marginTop = (SimpleDock.prototype.max - size) + 'px';
+            reflectedIconNodes[index].style.marginBottom = (SimpleDock.prototype.min - size) + 'px';
             reflectedIconNodes[index].style.marginTop = height+'px';
         } else {
             label[index].style.marginLeft = (iconNodes[index].offsetLeft-20+((iconNodes[index].clientWidth-label[index].clientWidth)/2))+'px';
             // determine the size for the icon, taking into account the scale factor
-            var size = minimumSize + scale * (iconSizes[index] - minimumSize);
+            var size = SimpleDock.prototype.min + scale * (iconSizes[index] - SimpleDock.prototype.min);
             // find the index of the appropriate image size
             var sizeIndex = 0;
             while (imageDetails[index].sizes[sizeIndex] < size
@@ -347,7 +359,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
             }
             
             // check whether the full icon with its caption should be displayed
-            if (size == maximumSize){
+            if (size == SimpleDock.prototype.max){
                 label[index].style.opacity = 1;
                 
             }else{
@@ -417,20 +429,20 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     if (i < index - range || i > index + range){
                         
                         // set the icon size to the minimum size
-                        iconSizes[i] = minimumSize;
+                        iconSizes[i] = SimpleDock.prototype.min;
                         
                     }else if (i == index){
                         
                         // set the icon size to be the maximum size
-                        iconSizes[i] = maximumSize;
+                        iconSizes[i] = SimpleDock.prototype.max;
                         
                     }else if (i < index){
                         
                         // set the icon size to the appropriate value
                         iconSizes[i] =
-                        minimumSize
+                        SimpleDock.prototype.min
                         + Math.round(
-                                     (maximumSize - minimumSize - 1)
+                                     (SimpleDock.prototype.max - SimpleDock.prototype.min - 1)
                                      * (
                                         Math.cos(
                                                  (i - index - across + 1) / range * Math.PI)
@@ -444,9 +456,9 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                         
                         // set the icon size to the appropriate value
                         iconSizes[i] =
-                        minimumSize
+                        SimpleDock.prototype.min
                         + Math.round(
-                                     (maximumSize - minimumSize - 1)
+                                     (SimpleDock.prototype.max - SimpleDock.prototype.min - 1)
                                      * (
                                         Math.cos(
                                                  (i - index - across) / range * Math.PI)
@@ -522,13 +534,16 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         
     }
     SimpleDock.prototype.processMouseDown = function (e){
-        
-        /*var e=window.event;
+        var e=window.event;
         var target = e.target || e.srcElement;
         var appd = SimpleDock.prototype.findApp(target.id);
         var node = iconNodes[appd].cloneNode(true);
+	node.lclick = iconNodes[appd].listeners.click;
+	window.testnode = iconNodes[appd];
         var nodei = node.src.substring(0, node.src.length - 4);
         window.nodel = label[appd].innerText;
+        SimpleDock.prototype.tempnodel = window.nodel;
+        if(window.nodel != 'Trash' && window.nodel != 'Applications') {
         document.body.appendChild(node);
         SimpleDock.prototype.removeAppM(appd);
         node.style.position = 'fixed';
@@ -538,6 +553,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         node.style.removeProperty('margin-top');
         node.style.width = 44+'px';
         node.style.height = 44+'px';
+        SimpleDock.prototype.tempnode = node;
         node.ondragstart = function() { return false; };
         document.onmousemove=function(e){
             if(!window.wsetX && !window.wsetY){
@@ -564,7 +580,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                                                 sizes:     [30, 100],
                                                 menuItems: ['open'],
                                                 menuClick: [function(){Trash();}],
-                                                onclick:   function (){Trash();}
+                                                onclick:   function (){node.lclick()}
                                                 }, 1);
                     window.newapp = 1;
                 }
@@ -600,8 +616,30 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
             }
         };
         document.onmouseup=function(e){
+			
             var dock = document.getElementById('dockContainer');
-            if (e.pageY > (window.innerHeight- dock.offsetHeight)){
+            if (e.pageY < (window.innerHeight+dock.children[1].offsetTop)) {
+                document.onmousemove=null;
+                delete window.wsetX;
+                delete window.wsetY;
+                var tlabel = '';
+                for(var w=0; w < iconNodes.length; w++)
+                {
+                if(label[w].innerHTML == SimpleDock.prototype.tempnodel) {
+                SimpleDock.prototype.removeApp(SimpleDock.prototype.tempnodel);
+                };
+                    if(w < (iconNodes.length-2) && label[w].innerHTML != window.nodel) {
+                    tlabel+=label[w].innerHTML+',';
+                    } else if(w == (iconNodes.length-2) && label[w].innerHTML != window.nodel) {
+                    tlabel+=label[w].innerHTML;
+                    };
+                    iconNodes[w].style.left = 0+'px';
+                    reflectedIconNodes[w].style.left = 0+'px';
+                }
+                core.testu(tlabel, 'Dockapps');
+                document.body.removeChild(SimpleDock.prototype.tempnode);
+                window.newapp = 0;
+            } else if (e.pageY > (window.innerHeight+dock.children[1].offsetTop)){
                 document.onmousemove=null;
                 delete window.wsetX;
                 delete window.wsetY;
@@ -656,6 +694,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     //window.arraytemp[w] = (window.arraytemp[w]-5)*(-1);
                     //window.arraytemp[w] -= 1;
                 }
+                var tlabel = '';
                 for (var w=0; w < iconNodes.length; w++)
                 {
                     iconnodes.push(iconNodes[window.arraytemp[w]]);
@@ -665,9 +704,15 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     tempdetails.push(imageDetails[window.arraytemp[w]]);
                     tempimage.push(images[window.arraytemp[w]]);
                 }
+                //core.testu(nodeitl.innerHTML, 'Dockapps');
                 window.nodesit = [];
                 for (var t=0; t < iconNodes.length; t++)
                 {
+                    if(t < (iconNodes.length-2)) {
+                    tlabel+=labels[t].innerHTML+',';
+                    } else if(t == (iconNodes.length-2)) {
+                    tlabel+=labels[t].innerHTML;
+                    };
                     iconNodes = iconnodes;
                     label = labels;
                     reflectedIconNodes = reflect;
@@ -676,26 +721,15 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     images = tempimage;
                     window.nodesit[t] = iconNodes[t];
                 }
-                //SimpleDock.prototype.updateIconProperties(SimpleDock.prototype.findApp('Trashed'));
+                core.testu(tlabel, 'Dockapps');
                 document.body.removeChild(node);
                 document.onmousemove=null;
                 document.onmouseup = '';
                 window.newapp = 0;
-            } else if (e.pageY < (window.innerHeight-dock.offsetHeight)) {
-                document.onmousemove=null;
-                delete window.wsetX;
-                delete window.wsetY;
-                SimpleDock.prototype.removeApp(window.nodel);
-                for(var w=0; w < iconNodes.length; w++)
-                {
-                    iconNodes[w].style.left = 0+'px';
-                    reflectedIconNodes[w].style.left = 0+'px';
-                }
-                document.body.removeChild(node);
-                window.newapp = 0;
             }
-        };*/
-    }
+        };
+	};
+        }
     SimpleDock.prototype.processRightClick = function (e){
         window.docklock = true;
         // set the event object if the browser does not supply it
@@ -729,10 +763,10 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         }
         if (SimpleDock.prototype.skip== false) {
             menu.style.left = target.offsetLeft+document.getElementById('dockContainer').offsetLeft+((target.clientWidth/2)-(menu.clientWidth/2))+'px';
-            menu.style.top = window.innerHeight-menu.clientHeight-maximumSize-(height*2)-8+'px';
+            menu.style.top = window.innerHeight-menu.clientHeight-SimpleDock.prototype.max-(height*2)-8+'px';
         } else {
             menu.style.left = target.offsetLeft+document.getElementById('dockContainer').offsetLeft+((target.clientWidth/2)-(menu.clientWidth/2))+'px';
-            menu.style.top = window.innerHeight-menu.clientHeight-minimumSize-(height*2)-8+'px';
+            menu.style.top = window.innerHeight-menu.clientHeight-SimpleDock.prototype.min-(height*2)-8+'px';
         }
         menu.style.background = 'rgba(0, 0, 0, 0.398438)';
         menu.style.zIndex = 2147483640;
@@ -761,9 +795,9 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     iconNodes[y].style.opacity = 1;
                     label[y].style.opacity = 1;
                     if (SimpleDock.prototype.skip== false) {
-                        label[y].style.marginTop = -(maximumSize*2)+20+'px';
+                        label[y].style.marginTop = -(SimpleDock.prototype.max*2)+20+'px';
                     } else {
-                        label[y].style.marginTop = -(minimumSize*2)-minimumSize+'px';
+                        label[y].style.marginTop = -(SimpleDock.prototype.min*2)-SimpleDock.prototype.min+'px';
                     }
                     SimpleDock.prototype.updateIconPropertiest(y);
                     iconNodes[y].style.zIndex = 0;
@@ -789,9 +823,9 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         var testl = document.createElement('div');
         testl.style.cssText = 'position: absolute;height: 20px;background: hsla(0, 100%,0%, 0.4);border-radius: 50px;margin-top: -176px;color: white;padding-left: 5px;padding-right: 5px;text-shadow: 0 2px 3px black;opacity: 0;-webkit-transition: linear 0.1s top;white-space: nowrap;';
         if (SimpleDock.prototype.skip== false) {
-            testl.style.marginTop = -(maximumSize*2)+20+'px';
+            testl.style.marginTop = -(SimpleDock.prototype.max*2)+20+'px';
         } else {
-            testl.style.marginTop = -(minimumSize*2)-minimumSize+'px';
+            testl.style.marginTop = -(SimpleDock.prototype.min*2)-SimpleDock.prototype.min+'px';
         }
         testl.innerHTML = Details.label;
         testl.className = 'label';
@@ -813,7 +847,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         // set height
         retested.style.marginBottom = '-20px';
         // store the initial size of the icon for this image
-        var tests = minimumSize;
+        var tests = SimpleDock.prototype.min;
         if (!Before){
             iconSizes.push(tests);
             label.push(testl);
@@ -827,16 +861,19 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                 tested.addEventListener('mouseout', this.processMouseOut, false);
                 tested.addEventListener('click', Details.onclick, false);
                 tested.addEventListener('contextmenu', this.processRightClick, false);
-                tested.addEventListener('mousedown', this.processMouseDown, false);
-                tested.addEventListener('dragstart', void(0), false);
+                //tested.addEventListener('mousedown', void(0), false);
+                tested.addEventListener('dragstart', this.processMouseDown, false);
             }else if (tested.attachEvent){
                 tested.attachEvent('onmousemove', this.processMouseMove);
                 tested.attachEvent('onmouseout', this.processMouseOut);
                 tested.attachEvent('onclick', Details.onclick);
                 tested.attachEvent('contextmenu', this.processRightClick, false);
-                tested.attachEvent('onmousedown', this.processMouseDown, false);
-                tested.attachEvent('ondragstart', void(0), false);
+                //tested.attachEvent('onmousedown', void(0), false);
+                tested.attachEvent('ondragstart', this.processMouseDown, false);
             }
+	    tested.listeners = {
+				click: Details.onclick
+                               };
             imageDetails.push(Details);
             for (var h = imageDetails.length; h <= imageDetails.length; h++) {
                 // loop over the sizes available for this image
@@ -874,16 +911,19 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                 tested.addEventListener('mouseout', this.processMouseOut, false);
                 tested.addEventListener('click', Details.onclick, false);
                 tested.addEventListener('contextmenu', this.processRightClick, false);
-                tested.addEventListener('mousedown', this.processMouseDown, false);
-                tested.addEventListener('dragstart', void(0), false);
+                //tested.addEventListener('mousedown', void(0), false);
+                tested.addEventListener('dragstart', this.processMouseDown, false);
             }else if (tested.attachEvent){
                 tested.attachEvent('onmousemove', this.processMouseMove);
                 tested.attachEvent('onmouseout', this.processMouseOut);
                 tested.attachEvent('onclick', Details.onclick, false);
                 tested.attachEvent('contextmenu', this.processRightClick, false);
-                tested.attachEvent('onmousedown', this.processMouseDown, false);
-                tested.attachEvent('ondragstart', void(0), false);
+                //tested.attachEvent('onmousedown', void(0), false);
+                tested.attachEvent('ondragstart', this.processMouseDown, false);
             }
+	    tested.listeners = {
+				click: Details.onclick
+                               };
             //var tempiconNodes = iconNodes[app];
             //var templabel = label[app];
             //var tempreflectedIconNodes = reflectedIconNodes[app];
@@ -934,9 +974,9 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         label[i] = document.createElement('div');
         label[i].style.cssText = 'position: absolute;height: 20px;background: hsla(0, 100%,0%, 0.4);border-radius: 50px;margin-top: -176px;color: white;padding-left: 5px;padding-right: 5px;text-shadow: 0 2px 3px black;opacity: 0;-webkit-transition: linear 0.1s top;white-space: nowrap;';
         if (SimpleDock.prototype.skip== false) {
-            label[i].style.marginTop = -(maximumSize*2)+20+'px';
+            label[i].style.marginTop = -(SimpleDock.prototype.max*2)+20+'px';
         } else {
-            label[i].style.marginTop = -(minimumSize*2)-minimumSize+'px';
+            label[i].style.marginTop = -(SimpleDock.prototype.min*2)-SimpleDock.prototype.min+'px';
         }
         label[i].innerHTML = imageDetails[i].label;
         label[i].className = 'label';
@@ -948,7 +988,7 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         iconNodes[i].style.position = 'relative';
         
         // store the initial size of the icon for this image
-        iconSizes[i] = minimumSize;
+        iconSizes[i] = SimpleDock.prototype.min;
         
         // create and store a node for the reflected icon for this image
         reflectedIconNodes[i] = document.createElement('img');
@@ -982,16 +1022,19 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
             iconNodes[i].addEventListener('mouseout', this.processMouseOut, false);
             iconNodes[i].addEventListener('click', imageDetails[i].onclick, false);
             iconNodes[i].addEventListener('contextmenu', this.processRightClick, false);
-            iconNodes[i].addEventListener('mousedown', this.processMouseDown, false);
-            iconNodes[i].addEventListener('dragstart', void(0), false);
+            //iconNodes[i].addEventListener('mousedown', void(0), false);
+            iconNodes[i].addEventListener('dragstart', this.processMouseDown, false);
         }else if (iconNodes[i].attachEvent){
             iconNodes[i].attachEvent('onmousemove', this.processMouseMove);
             iconNodes[i].attachEvent('onmouseout', this.processMouseOut);
             iconNodes[i].attachEvent('onclick', imageDetails[i].onclick);
             iconNodes[i].attachEvent('contextmenu', this.processRightClick, false);
-            iconNodes[i].attachEvent('onmousedown', this.processMouseDown, false);
-            iconNodes[i].attachEvent('ondragstart', void(0), false);
+            //iconNodes[i].attachEvent('onmousedown', void(0), false);
+            iconNodes[i].attachEvent('ondragstart', this.processMouseDown, false);
         }
+	    iconNodes[i].listeners = {
+				click: imageDetails[i].onclick
+                               };
         
         // loop over the sizes available for this image
         for (var j = 0; j < imageDetails[i].sizes.length; j++){
@@ -1084,6 +1127,18 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
         //this.updateIconPropertiest(x)
         //}
     }
+    SimpleDock.prototype.maxsize = function(csize) {
+    	SimpleDock.prototype.max = csize;
+    	for(var y=0; y < iconNodes.length; y++) {
+    		SimpleDock.prototype.updateIconPropertiesa(y);
+    	};
+    }
+    SimpleDock.prototype.minsize = function(csize) {
+    	SimpleDock.prototype.min = csize;
+    	for(var y=0; y < iconNodes.length; y++) {
+    		SimpleDock.prototype.updateIconPropertiesa(y);
+    	};
+    }
     SimpleDock.prototype.skipT = function(skipt) {
         SimpleDock.prototype.skip= skipt;
         for (var y=0; y < iconNodes.length; y++) {
@@ -1091,9 +1146,9 @@ function SimpleDock(node, imageDetails, minimumSize, maximumSize, range, height,
                     iconNodes[y].style.opacity = 1;
                     label[y].style.opacity = 1;
                     if (SimpleDock.prototype.skip== false) {
-                        label[y].style.marginTop = -(maximumSize*2)+20+'px';
+                        label[y].style.marginTop = -(SimpleDock.prototype.max*2)+20+'px';
                     } else {
-                        label[y].style.marginTop = -(minimumSize*2)-minimumSize+'px';
+                        label[y].style.marginTop = -(SimpleDock.prototype.min*2)-SimpleDock.prototype.min+'px';
                     }
                     SimpleDock.prototype.updateIconPropertiest(y);
                     iconNodes[y].style.zIndex = 0;

@@ -11,7 +11,8 @@ function load($path)
 {
     return require $path;
 }
-$version = '0.60';
+$version = '0.69';
+$updateinfo = "Core bug fixes<br>New Notifycation system!";
 ?>
 <?
 if (!$isMobile) {
@@ -26,7 +27,7 @@ if (!$isMobile) {
 	<link rel="shortcut icon" href="wallpaper/BluDotlogo.png">
 	<meta itemprop="name" content="ApfelsineOS">
 	<meta itemprop="description" content="An easy WebOS for on the go. Fast, simple, and small. A new way for cloud computing.">
-	<meta itemprop="image" content="http://bludot.tk/wallpaper/BluDotlogo.png">
+	<meta itemprop="image" content="http://bludotos.com/wallpaper/BluDotlogo.png">
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -35,6 +36,27 @@ if (!$isMobile) {
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<style>
+input[type="range"]{
+    background: white;
+width: 130px;
+height: 15px;
+-webkit-appearance: none;
+border-radius: 8px;
+-moz-border-radius: 8px;
+-wekkit-border-radius: 8px;
+-webkit-box-shadow: inset 0px 0px 12px 2px rgba(0, 0, 0, 0.9);
+}
+
+input[type="range"]::-webkit-slider-thumb{
+   -webkit-appearance:none !important;  
+   width:20px;
+   height:20px;
+   -webkit-appearance: none;
+    border-radius: 20px;
+    border:2px solid rgb(150, 150, 150);;
+    background-color:rgb(200, 200, 200);
+    -webkit-box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.9);
+ }
 .appdiv:after {
 position: absolute;
 content: "";
@@ -112,49 +134,84 @@ background-image: -webkit-linear-gradient(top, #555, #333);
     border-radius:3px;
     margin-bottom:15px;
 }
-.notifydialog {
-width: 230px;
-top: 0;
-right: 0;
-margin: 5px 10px;
-padding: 10px;
-background-color: #555;
-background-image: -webkit-gradient(linear, left top, left bottom, from(#555), to(#333));
-background-image: -webkit-linear-gradient(top, #555, #333);
-background-image: -moz-linear-gradient(top, #555, #333);
-background-image: -ms-linear-gradient(top, #555, #333);
-background-image: -o-linear-gradient(top, #555, #333);
-background-image: linear-gradient(top, #555, #333);
-filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#555555', EndColorStr='#333333');
--webkit-border-radius: 5px;
--moz-border-radius: 5px;
--o-border-radius: 5px;
-border-radius: 5px;
--webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.3), inset 1px 0 0 rgba(255, 255, 255, 0.3), inset -1px 0 0 rgba(255, 255, 255, 0.3), 0 0 4px rgba(0, 0, 0, 0.6);
--moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(255,255,255,0.3), inset 1px 0 0 rgba(255,255,255,0.3), inset -1px 0 0 rgba(255,255,255,0.3), 0 0 4px rgba(0,0,0,0.6);
-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.3), inset 1px 0 0 rgba(255, 255, 255, 0.3), inset -1px 0 0 rgba(255, 255, 255, 0.3), 0 0 4px rgba(0, 0, 0, 0.6);
--webkit-text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
--moz-text-shadow: 0 -1px 0 rgba(0,0,0,0.6);
-text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.6);
-border: 1px solid #333;
-border-bottom-color: #222;
-border-top-color: #444;
-color: #EEE;
-overflow: hidden;
--webkit-transform: translateY(36px);
--moz-transform: translateY(36px);
-transform: translateY(36px);
--webkit-transition: all 0.3s ease;
--moz-transition: all 0.3s ease;
-transition: all 0.3s ease;
-opacity: 0.8;
-z-index: 970;
+#notifications {
+ position:fixed;
+  top:30px;
+  right:0px;
+  width:300px;
+}
+#notifymain {
+  position:fixed;
+  right:0px;
+  width:300px;
+  height:auto;
+  background:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI4MjgyOCIgc3RvcC1vcGFjaXR5PSIwLjgiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjgiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+    border: 1px solid blue;
+    padding: 4px;
+  min-height:50px;
+  z-index:9999999;
+  box-shadow:5px 5px 15px black;
+  border-radius:5px;
+}
+
+#notifymain:after {
+content: '';
+display: block;
+position: absolute;
+top: 50%;
+right:-7px;
+width: 10px;
+height: 10px; 
+background:url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzI4MjgyOCIgc3RvcC1vcGFjaXR5PSIwLjgiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzAwMDAwMCIgc3RvcC1vcGFjaXR5PSIwLjgiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9InVybCgjZ3JhZC11Y2dnLWdlbmVyYXRlZCkiIC8+Cjwvc3ZnPg==);
+    border-right:1px solid blue;
+    border-bottom:1px solid blue;
+ -moz-transform:rotate(-45deg);
+  -webkit-transform:rotate(-45deg);
+  margin-top:-10px;
+  box-shadow:5px 5px 15px black;
+}
+#notifylogo {
+  position:absolute;
+  top:0px;
+  left:0px;
+  width:50px;
+  height:auto;
+  float:left;
+}
+.notifylogo {
+  position:absolute;
+  width:50px;
+  height:50px;
+}
+#notifycontent {
+ position:relative;
+  top:-0px;
+  left:60px;
+  width:250px;
+  height:100%;
+}
+.notifytext {
+  position:relative;
+  width:auto;
+  height:auto;
+ color:white;
+  word-wrap:normal;
+}
+#notifytest {
+ position:fixed;
+  top:0px
+    left:0px;
+}
+body {
+font-family:arial;
 }
 	</style>
 <? if(!$isMobile) { ?>
 <link rel="stylesheet" href="loadOS.css" type="text/css"/>
 <? }; ?>
+<script src="ace/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
+
 window.ontouchmove = function(e){
     e.preventDefault();
 }
@@ -291,7 +348,7 @@ return true;
 FileNet:function ()
 {
 
-var FileNet=SimpleWin.create("FileNet", "FileNet", "users/"+window.user+"/sysapps/FileNet/?userN="+window.user+"");
+var FileNet=SimpleWin.create("FileNet", "FileNet", "users/"+window.user+"/sysapps/FileNet/?userN="+window.user+"", 400, 750, function(obj){var left = (window.innerWidth-obj.clientWidth)/2; return left;}, function(obj){var top = ((window.innerHeight-obj.clientHeight)/2)-23; return top;});
 dock.addclick('FileNet', ['close', 'minimize'], [function(){SimpleWin.close(FileNet);}, function(){SimpleWin.minimize(FileNet);}]);
      
 FileNet.onclose=function(){ //Run custom code when window is being closed (return false to cancel action):
@@ -314,7 +371,7 @@ window.dock.AddNew({
             menuClick: [function(){this.name();}],
             onclick:   function (){return false;}
           }, dock.findApp('Trash'));
-var Prefer=SimpleWin.create("Preferences", "prefed", "users/"+window.user+"/sysapps/Preferences/index.php?userN="+window.user+"");
+var Prefer=SimpleWin.create("Preferences", "prefed", "users/"+window.user+"/sysapps/Preferences/index.php?userN="+window.user+"", 420, 540, function(obj){var left = (window.innerWidth-obj.clientWidth)/2; return left;}, function(obj){var top = ((window.innerHeight-obj.clientHeight)/2)-23; return top;});
 dock.addclick('Prefs', ['close', 'minimize'], [function(){SimpleWin.close(Prefer);}, function(){SimpleWin.minimize(Prefer);}]);
 <?
 } else if ($isMobile) {
@@ -353,7 +410,7 @@ return true;
 },
 AboutOS:function()
 {
-var aboutos=SimpleWin.create("About", "about", "aboutOSw.php", 450, 400, 1, 1);
+var aboutos=SimpleWin.create("About", "about", "aboutOSw.php?ver=<? echo $version; ?>", 450, 400, function(obj){var left = (window.innerWidth-obj.clientWidth)/2; return left;}, function(obj){var top = ((window.innerHeight-obj.clientHeight)/2)-23; return top;}, 1, 1);
      
 aboutos.onclose=function(){ //Run custom code when window is being closed (return false to cancel action):
 return true
@@ -376,7 +433,11 @@ window.appdivopen =1;
 window.appdiv = core.create('div');
 document.body.appendChild(appdiv);
 appdiv.style.cssText = 'background: black;width: 300px;height: 250px;z-index: 2147486;position: fixed;bottom: 60px;border-radius: 20px;right: 486px;border: 2px solid blue;box-shadow: inset 0px 0px 23px -3px white;padding:5px;';
-appdiv.style.bottom = node.clientHeight+10+'px';
+if(dock.skip == 1 || dock.skip == true) {
+appdiv.style.bottom = dock.min+'px';
+} else if(dock.skip == 0 || dock.skip == false) {
+appdiv.style.bottom = dock.max+'px';
+};
 appdiv.style.left = checkthis.offsetLeft+((window.innerWidth-dock.node.clientWidth)/2)-(appdiv.clientWidth/2)+(node.clientWidth/2)+'px';
 docklock = true;
 appdiv.className = 'appdiv';
@@ -396,7 +457,7 @@ getapps.onreadystatechange = function() {
         temp.appendChild(temp.img);
         temp.img.style.cssText = 'position:relative;top:0px;left:0px;width:75px;height75px;';
         temp.appendChild(temp.name);
-        temp.name.style.cssText = 'position:relative;top:0px;left:0px;width:100%;height75px;color:white;';
+        temp.name.style.cssText = 'position:relative;top:0px;left:0px;width:100%;height75px;color:white;text-align:center;';
         temp.onclick = function(){core.openapp(this.name.innerHTML);core.loadApps.Applications(null);if(dock.skip == 1) {dock.skipT(0);setTimeout(function(){dock.skipT(1);}, 5);} else if(dock.skip == false || dock.skip == 0){dock.skipT(0);};};
         };
 }
@@ -538,10 +599,10 @@ core.checkupdates();
                                      window.prefit = JSON.parse(checkp.responseText);
                                      //window.userprefs = prefit;
                                      core.OS.Desktop.background.src = prefit.wallpaper;
-                                     if (prefit.dockmag == 'false') {
-                                         prefit.dockmag = false;
-                                     } else if (prefit.dockmag == 'true') {
-                                         prefit.dockmag = true;
+                                     if (prefit.Dockmag == 'false') {
+                                         prefit.Dockmag = false;
+                                     } else if (prefit.Dockmag == 'true') {
+                                         prefit.Dockmag = true;
                                      }
                                      core.getstyle(prefit.dock[0], prefit.dock[1], 'dock', prefit.dock[2]);
                                      core.docktheme = prefit.dock[1];
@@ -551,46 +612,19 @@ core.checkupdates();
                                      setTimeout(function(){
                                      window.dockit = [];
                                           //window.i = i;
+                                          for(var t=0; t < prefit.Dockapps.length; t++) {
+                                          var t = t;
                                           window.temp = {
-                                                    name:      'icons/DevCenter',
-                                                    label:     'DevCenter',
+                                                    name:      'icons/'+prefit.Dockapps[t],
+                                                    label:     prefit.Dockapps[t],
                                                     extension: '.png',
                                                     sizes:     [44,100],
                                                     menuItems: ['open'],
-                                                    menuClick: [function(){core.loadApps.DevCenter();}],
-                                                    onclick:   function(){core.loadApps.DevCenter();}
+                                                    menuClick: [core.loadApps[prefit.Dockapps[t]]],
+                                                    onclick:   core.loadApps[prefit.Dockapps[t].toString()]
                                           };
-                                          window.dockit[0] = window.temp;
-                                          window.temp = {
-                                                    name:      'icons/FileNet',
-                                                    label:     'FileNet',
-                                                    extension: '.png',
-                                                    sizes:     [44,100],
-                                                    menuItems: ['open'],
-                                                    menuClick: [function(){core.loadApps.FileNet();}],
-                                                    onclick:   function(){core.loadApps.FileNet();}
+                                          window.dockit[t] = window.temp;
                                           };
-                                          window.dockit[1] = window.temp;
-                                          window.temp = {
-                                                      name:      'icons/Appstore',
-                                                      label:     'Appstore',
-                                                      extension: '.png',
-                                                      sizes:     [44, 100],
-                                                      menuItems: ['open'],
-                                                      menuClick: [function(){core.loadApps.Appstore();}],
-                                                      onclick:   function (){core.loadApps.Appstore();}
-                                                    };
-                                          window.dockit.push(window.temp);
-                                          window.temp = {
-                                                      name:      'icons/Applications',
-                                                      label:     'Applications',
-                                                      extension: '.png',
-                                                      sizes:     [44, 100],
-                                                      menuItems: ['open'],
-                                                      menuClick: [function(){core.loadApps.Applications(this);}],
-                                                      onclick:   function (){core.loadApps.Applications(this);}
-                                                    };
-                                          window.dockit.push(window.temp);
                                           if (prefit.trash == 'empty') { 
                                           window.temp = {
                                                     name:      'icons/trash-empty',
@@ -618,13 +652,13 @@ core.checkupdates();
                                         window.dock = new SimpleDock(
                                                 document.getElementById('dock'),
                                                 window.dockit,
-                                                44,
-                                                100,
+                                                parseInt(prefit.Dockmin),
+                                                parseInt(prefit.Dockmax),
                                                 3,
                                                 5,
-                                                10,
+                                                1,
                                                <? if(!$isMobile){?>
-                                                prefit.dockmag);
+                                                prefit.Dockmag);
                                                <? } else if($isMobile){?>
                                                 true);
                                                <?};?>
@@ -646,13 +680,13 @@ core.checkupdates();
                                         window.dock = new SimpleDock(
                                                 document.getElementById('dock'),
                                                 window.docks,
-                                                44,
-                                                100,
+                                                parseInt(prefit.Dockmin),
+                                                parseInt(prefit.Dockmax),
                                                 3,
                                                 5,
-                                                10,
+                                                1,
                                                <? if(!$isMobile){?>
-                                                prefit.dockmag);
+                                                prefit.Dockmag);
                                                <? } else if($isMobile){?>
                                                 true);
                                                <?};?>
@@ -765,11 +799,11 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
     	{
     	clickt(this);
     	};
-    	core.OS.Taskbar.children[0].children[1].children[0].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[0].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AboutOS();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[1].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[1].onclick = function()
     	{
     		clickt(clicked);core.loadApps.Prefs();
     	};
@@ -791,28 +825,28 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
         };
     	if(core.Admin == 1)
     	{
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AdminC();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[5].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[5].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	} else {
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	};
 };
@@ -822,38 +856,38 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
     	{
     	clickt(this);
     	};
-    	core.OS.Taskbar.children[0].children[1].children[0].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[0].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AboutOS();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[1].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[1].onclick = function()
     	{
     		clickt(clicked);core.loadApps.Prefs();
     	};
     	if(core.Admin == 1)
     	{
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AdminC();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[5].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[5].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	} else {
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	};
     				core.getstyle(prefit.windows[0], prefit.windows[1], 'window', prefit.windows[2]);
@@ -864,7 +898,7 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
                          updatev.open("GET", "uconf.php?path=users/"+window.user+"/config&change=<? echo $version; ?>", true);
                          updatev.onreadystatechange = function() {
                                if(updatev.readyState == 4){
-                                     MainTools.Notify('Version Updatdhtmldhtmled\n<? echo $version; ?>');
+                                     MainTools.Notify('Version Updatdhtmldhtmled\n<? echo $version; ?>B<br><? echo $updateinfo; ?>', null, 8);
                                }
                                }
                                updatev.send();
@@ -882,7 +916,7 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
                          checkit.send(sendit);
                 };
     core.register = function(){
-    	window.location = 'http://bludot.tk/registerBeta.php';
+    	window.location = 'http://bludotos.com/registerBeta.php';
     	};
     core.load = function(){
 
@@ -1070,7 +1104,7 @@ var loadPrefs = function(every, done){
         this.OS.loginback = this.create('img');
         document.body.appendChild(this.OS.loginback);
         this.style('position:fixed; width:100%; height:100%; top:0px; left:0px; z-index:2147485;', this.OS.loginback);
-        this.OS.loginback.src = 'http://bludot.tk/wallpaper/BluDot.svg';
+        this.OS.loginback.src = 'http://bludotos.com/wallpaper/BluDot.svg';
         this.OS.loginback.id = 'loginback';
         this.OS.logindiv = this.create('div');
         document.body.appendChild(this.OS.logindiv);
@@ -1127,6 +1161,7 @@ var loadPrefs = function(every, done){
         this.OS.logindiv.body.content.form.appendChild(this.OS.logindiv.body.content.form.input3);
         this.OS.logindiv.body.content.form.input3.type = 'checkbox';
         this.OS.logindiv.body.content.form.input3.name = 'remember';
+        this.style('width:100%', this.OS.logindiv.body.content.form.input3);
         this.OS.logindiv.body.content.form.br3 = this.create('br');
         this.OS.logindiv.body.content.form.appendChild(this.OS.logindiv.body.content.form.br3);
         this.OS.logindiv.body.content.form.input4 = this.create('input');
@@ -1148,7 +1183,7 @@ var loadPrefs = function(every, done){
         this.OS.logindiv.body.content.font = this.create('font');
         this.OS.logindiv.body.content.appendChild(this.OS.logindiv.body.content.font);
         this.style('position:relative;bottom:20%;left:5%;font-size:13px;', this.OS.logindiv.body.content.font);
-        this.OS.logindiv.body.content.font.innerHTML = '<b>Help/Support</b><a href="mailto:support@bludot.tk">support@bludot.tk</a>';
+        this.OS.logindiv.body.content.font.innerHTML = '<b>Help/Support</b><a href="mailto:support@bludotos.com">support@bludotos.com</a>';
         this.OS.logindiv.body.content.br5 = this.create('br');
         this.OS.logindiv.body.content.appendChild(this.OS.logindiv.body.content.br5);
         this.OS.logindiv.bottom = this.create('div');
@@ -1214,10 +1249,10 @@ var checkp = new XMLHttpRequest();
                                      //window.userprefs = prefit;
                                         core.Cversion = <?echo $version;?>;
                                      core.OS.Desktop.background.src = prefit.wallpaper;
-                                     if (prefit.dockmag == 'false') {
-                                         prefit.dockmag = false;
-                                     } else if (prefit.dockmag == 'true') {
-                                         prefit.dockmag = true;
+                                     if (prefit.Dockmag == 'false') {
+                                         prefit.Dockmag = false;
+                                     } else if (prefit.Dockmag == 'true') {
+                                         prefit.Dockmag = true;
                                      }
                                      core.getstyle(prefit.dock[0], prefit.dock[1], 'dock', prefit.dock[2]);
                                      core.docktheme = prefit.dock[1];
@@ -1227,46 +1262,19 @@ var checkp = new XMLHttpRequest();
                                      setTimeout(function(){
                                      window.dockit = [];
                                           //window.i = i;
+                                          for(var t=0; t < prefit.Dockapps.length; t++) {
+                                          var t = t;
                                           window.temp = {
-                                                    name:      'icons/DevCenter',
-                                                    label:     'DevCenter',
+                                                    name:      'icons/'+prefit.Dockapps[t],
+                                                    label:     prefit.Dockapps[t],
                                                     extension: '.png',
                                                     sizes:     [44,100],
                                                     menuItems: ['open'],
-                                                    menuClick: [function(){core.loadApps.DevCenter();}],
-                                                    onclick:   function(){core.loadApps.DevCenter();}
+                                                    menuClick: [core.loadApps[prefit.Dockapps[t]]],
+                                                    onclick:   core.loadApps[prefit.Dockapps[t].toString()]
                                           };
-                                          window.dockit[0] = window.temp;
-                                          window.temp = {
-                                                    name:      'icons/FileNet',
-                                                    label:     'FileNet',
-                                                    extension: '.png',
-                                                    sizes:     [44,100],
-                                                    menuItems: ['open'],
-                                                    menuClick: [function(){core.loadApps.FileNet();}],
-                                                    onclick:   function(){core.loadApps.FileNet();}
+                                          window.dockit[t] = window.temp;
                                           };
-                                          window.dockit[1] = window.temp;
-                                          window.temp = {
-                                                      name:      'icons/Appstore',
-                                                      label:     'Appstore',
-                                                      extension: '.png',
-                                                      sizes:     [44, 100],
-                                                      menuItems: ['open'],
-                                                      menuClick: [function(){core.loadApps.Appstore();}],
-                                                      onclick:   function (){core.loadApps.Appstore();}
-                                                    };
-                                          window.dockit.push(window.temp);
-                                          window.temp = {
-                                                      name:      'icons/Applications',
-                                                      label:     'Applications',
-                                                      extension: '.png',
-                                                      sizes:     [44, 100],
-                                                      menuItems: ['open'],
-                                                      menuClick: [function(){core.loadApps.Applications(this);}],
-                                                      onclick:   function (){core.loadApps.Applications(this);}
-                                                    };
-                                          window.dockit.push(window.temp);
                                           if (prefit.trash == 'empty') { 
                                           window.temp = {
                                                     name:      'icons/trash-empty',
@@ -1294,13 +1302,13 @@ var checkp = new XMLHttpRequest();
                                         window.dock = new SimpleDock(
                                                 document.getElementById('dock'),
                                                 window.dockit,
-                                                44,
-                                                100,
+                                                parseInt(prefit.Dockmin),
+                                                parseInt(prefit.Dockmax),
                                                 3,
                                                 5,
-                                                10,
+                                                1,
                                                <? if(!$isMobile){?>
-                                                prefit.dockmag);
+                                                prefit.Dockmag);
                                                <? } else if($isMobile){?>
                                                 true);
                                                <?};?>
@@ -1322,13 +1330,13 @@ var checkp = new XMLHttpRequest();
                                         window.dock = new SimpleDock(
                                                 document.getElementById('dock'),
                                                 window.docks,
-                                                44,
-                                                100,
+                                                parseInt(prefit.Dockmin),
+                                                parseInt(prefit.Dockmax),
                                                 3,
                                                 5,
-                                                10,
+                                                1,
                                                <? if(!$isMobile){?>
-                                                prefit.dockmag);
+                                                prefit.Dockmag);
                                                <? } else if($isMobile){?>
                                                 true);
                                                <?};?>
@@ -1448,11 +1456,11 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
     	{
     	clickt(this);
     	};
-    	core.OS.Taskbar.children[0].children[1].children[0].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[0].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AboutOS();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[1].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[1].onclick = function()
     	{
     		clickt(clicked);core.loadApps.Prefs();
     	};
@@ -1462,7 +1470,7 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
         core.OS.Taskbar.children[0].children[1].children[2].children[1].onmouseout = function(){
                 movet(this, 0);
         };
-        core.OS.Taskbar.children[0].children[1].children[2].children[1].children[0].onclick = function(){
+        core.OS.Taskbar.children[0].children[1].children[2].children[1].onclick = function(){
                 if(dock.skip == 1)
                 {
                      dock.skipT(0);
@@ -1473,28 +1481,28 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
                 };
         };
     	<? if($session->isAdmin()){ ?>
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AdminC();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[5].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[5].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	<? } else { ?>
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	<? }; ?>
 };
@@ -1504,37 +1512,37 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
     	{
     	clickt(this);
     	};
-    	core.OS.Taskbar.children[0].children[1].children[0].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[0].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AboutOS();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[1].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[1].onclick = function()
     	{
     		clickt(clicked);core.loadApps.Prefs();
     	};
     	<? if($session->isAdmin()){ ?>
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.AdminC();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[5].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[5].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	<? } else { ?>
-    	core.OS.Taskbar.children[0].children[1].children[3].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[3].onclick = function()
     	{
     		clickt(clicked);core.loadApps.logout();
     	};
-    	core.OS.Taskbar.children[0].children[1].children[4].children[0].onclick = function()
+    	core.OS.Taskbar.children[0].children[1].children[4].onclick = function()
     	{
     		clickt(clicked);
-    		window.location.href='http://bludot.tk';
+    		window.location.href='http://bludotos.com';
     	};
     	<? }; ?>
                                 for (var i=0; i < document.body.children.length; i++) {
@@ -1554,7 +1562,7 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
                          updatev.open("GET", "uconf.php?path=users/"+window.user+"/config&change=<? echo $version; ?>", true);
                          updatev.onreadystatechange = function() {
                                if(updatev.readyState == 4){
-                                     MainTools.Notify('Version Updated\n<? echo $version; ?>');
+                                     MainTools.Notify('Version Updated\n<? echo $version; ?>B<br><? echo $updateinfo; ?>', null, 8);
                                }
                                }
                                updatev.send();
@@ -1563,7 +1571,7 @@ core.OS.Taskbar.children[0].children[0].onclick = function()
                          }
                          checkp.send();
                          <? };?>
-    setTimeout(function() {document.body.style.cssText = 'position:fixed;top:0px;left:0px;right:0px;bottom:0px;height:100%;padding:0px;margin:0px;background:black;text-align:center;overflow:hidden;';}, 5000);
+    setTimeout(function() {document.body.style.cssText = 'position:fixed;top:0px;left:0px;right:0px;bottom:0px;height:100%;padding:0px;margin:0px;background:black;overflow:hidden;';}, 5000);
     };
     priv.auth = function(){
         var rand = function() {
@@ -1583,24 +1591,24 @@ var getapps = new XMLHttpRequest();
 getapps.open('GET', 'apps.php?goto=users/'+core.user+'/sysapps/FileNet/apps/', true);
 getapps.onreadystatechange = function() {
         if(getapps.readyState==4) {
-        window.respit = JSON.parse(getapps.responseText);
+        window.respit = window.installed = JSON.parse(getapps.responseText);
 core.capps = [];
         for(var i=0; i < respit.dirs.length; i++) {
 window.capp = respit.dirs[i];
 var cupdateitq = new XMLHttpRequest();
-cupdateitq.open('GET', 'users/'+core.user+'/sysapps/FileNet/apps/'+respit.dirs[i]+'/version.txt', true);
+cupdateitq.open('GET', 'users/'+core.user+'/sysapps/FileNet/apps/'+respit.dirs[i]+'/version.txt', false);
 cupdateitq.onreadystatechange = function() {
         if(cupdateitq.readyState==4) {
                 var resp = JSON.parse(cupdateitq.responseText.toString());
                 window.resp2 = resp;
                 window.resp2.app = window.capp;
 var updateitq = new XMLHttpRequest();
-updateitq.open('GET', 'appstore/apps/'+window.resp2.cat+'/'+window.resp2.app+'/version.txt', true);
+updateitq.open('GET', 'appstore/apps/'+window.resp2.cat+'/'+window.resp2.app+'/version.txt', false);
 updateitq.onreadystatechange = function() {
         if(updateitq.readyState==4) {
                 var respw = JSON.parse(updateitq.responseText.toString());
                 window.respw = respw;
-                if(window.resp2.version < window.respw.version) {core.capps.push(window.resp2.app);};
+                if(parseFloat(window.resp2.version) < parseFloat(window.respw.version)) {core.capps.push(window.resp2.app);};
                 
         }
 }
@@ -1613,6 +1621,24 @@ cupdateitq.send();
 }
 getapps.send();
 };
+core.testu = function(array, name) {
+var test = new XMLHttpRequest();
+test.open('GET', 'updateconf.php?user='+core.user+'&array='+array+'&name='+name, true);
+test.onreadystatechange = function() {
+if(test.readyState == 4) {
+};
+};
+test.send();
+};
+core.testus = function(array, name) {
+var test = new XMLHttpRequest();
+test.open('GET', 'updateconf.php?user='+core.user+'&change='+array+'&name='+name, true);
+test.onreadystatechange = function() {
+if(test.readyState == 4) {
+};
+};
+test.send();
+};
     core.test = function(token){
     if(token == priv.token)
     {
@@ -1624,9 +1650,11 @@ getapps.send();
     priv.auth();
     return core;
 }());
+//window.onload = function(){core.getscript('default', 'script', 'maintools');core.load();document.forms[0].children[0].children[0].focus();};
 window.onload = function(){core.getscript('default', 'script', 'maintools');core.load();};
 </script>
 </head>
 <body scrolling="no" id="body" oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+<div id="notifications"></div>
 </body>
 </html>

@@ -3,8 +3,8 @@ var SimpleWin = {
 theme:'default',
 zindexbase:10,
 Winds:0,
-init:function(wid, height, width, size, bar){
-        if (!height && !width) {
+init:function(wid, height, width, left, top, size, bar){
+        if (!height && !width && !left && !top) {
                var height = window.innerHeight-document.getElementById('background').clientHeight;
                var width= window.innerWidth;
         }
@@ -27,6 +27,12 @@ init:function(wid, height, width, size, bar){
 	var wid = windowdiv;
 	document.getElementById('dhtmlwindowholder').appendChild(wid);
 	wid.style.cssText = 'position:fixed;left:0px;top:23px;width:'+width+'px;height:'+height+'px;display:block;-webkit-border-radius: 30px;-moz-border-radius: 20px;border-radius: 20px;';
+        if(left) {
+        wid.style.left = left(wid)+'px';
+        };
+        if(top) {
+        wid.style.top = top(wid)+'px';
+        };
 	wid.children[1].style.height = wid.innerheight+'px';
 	wid.style.zIndex=parseInt(SimpleWin.zindexbase)+1;
 	SimpleWin.zindexbase=wid.style.zIndex;
@@ -69,9 +75,9 @@ getdata:function(data, callback){
 	};
 	xmlhttp.send();
 },
-create:function(wid, title, data, height, width, size, bar){
+create:function(wid, title, data, height, width, left, top, size, bar){
 	var d=SimpleWin;
-	wid=this.init(wid, height, width, size, bar);
+	wid=this.init(wid, height, width, left, top, size, bar);
 	window.wid=wid;
 	this.getdata(data, function(xmlhttp){
 		wid.content.innerHTML=xmlhttp;
@@ -176,11 +182,13 @@ minimize:function(wid){
                              onclick:   function (){SimpleWin.minimize(wid);}
                              }, dock.findApp('Trash'));
 		wid.min=true;
+        window.bar(1);
 	} else if (wid.min==true){
                 dock.removeApp(wid.id+wid.nim);
                 wid.nim-=1;
 		wid.style.display='block';
 		wid.min=false;
+this.setfocus(wid);
 	};
 },
 maximize:function(wid){
@@ -213,6 +221,20 @@ restore:function(wid){
 		wid.style.top=wid.attrstop;
 		wid.style.width=wid.attrswidth;
 		wid.style.height=wid.attrsheight;
+                this.zindexbase++;
+	wid.style.zIndex = this.zindexbase;
+	window.actT = wid;
+for (var x=0; x < thisis.length; x++)
+{
+     if(window.actT == thisis[x])
+     {
+        var thisislength = x;
+        window.actT.x = x;
+        thisis[thisislength].menu();
+     }
+}
+	this.lastact = wid;
+        
 },
 };
 window.addEventListener('keydown', function(event) {

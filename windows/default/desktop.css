@@ -65,7 +65,8 @@ border-top-left-radius:5px;
 }
 
 .drag-content {
-border-radius:5px;
+border-bottom-right-radius: 5px;
+border-bottom-left-radius: 5px;
 }
 
 .drag-resizearea{ /*CSS for Resize Area itself*/

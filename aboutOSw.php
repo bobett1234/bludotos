@@ -75,6 +75,9 @@ html, body {
     height: 100%;
 }​
 </style>
+<?
+$version = $_GET['ver'];
+?>
 <div id="about">
     <center style="position:relative;top:3px;">
         <img src="http://bludot.tk/wallpaper/BluDotlogo.png" style="width:150px;height:150px"/>
@@ -84,7 +87,7 @@ html, body {
         </font>
         <br>
         <font>
-            Version 2.00
+            Version <? echo $version; ?>B
         </font>
     </center>
         <br>

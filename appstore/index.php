@@ -57,6 +57,10 @@ ajax.onreadystatechange = function() {
                 window.tempit = 'true';
                 };
                 };
+                if(core.capps.length == 0) {
+                temp.install.innerHTML = 'Installed';
+                window.tempit = 'true';
+                };
                 break;
                 };
                 if(window.installed.dirs[h] != resp.categories[propName][0]) {
@@ -71,7 +75,7 @@ ajax.onreadystatechange = function() {
                 temp.name.innerHTML = resp.categories[propName][0];
                 temp.img.style.cssText = "height: 100%;position: relative;width: 75px;left: 0px;top: 0px;float: right;";
                 temp.name.style.cssText = "position: relative;width: 125px;left: 0px;top: 0px;float: left;height:20px;font-weight: bold;text-decoration: underline;";
-                temp.install.style.cssText = "position: relative;width: 75px;left: 20px;top: 30px;float: left;height:20px;background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3));backgroud: -moz-linear-gradient(top ,#00b7ea 0%, #009ec3 100%);border-radius: 20px;font-size: 15px;text-align: center;line-height: 20px;font-weight: bold;color: white;box-shadow: 0px 0px 10px 0px gray;";
+                temp.install.style.cssText = "position: relative;width: 75px;left: 20px;top: 30px;float: left;height:20px;backgroud: -moz-linear-gradient(top, #00b7ea 0%, #009ec3 100%);background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#00b7ea), color-stop(100%,#009ec3));border-radius: 20px;font-size: 15px;text-align: center;line-height: 20px;font-weight: bold;color: white;box-shadow: 0px 0px 10px 0px gray;";
                 if(navigator.userAgent.indexOf("Firefox") != -1){
                 temp.install.style.background = '-moz-linear-gradient(top ,#00b7ea 0%, #009ec3 100%)';
                 } else {
@@ -152,8 +156,13 @@ for(var i=0; i < thisis[actT.x].resp.categories[Name].length; i++)
                 window.tempit = 'true';
                 };
                 };
+                if(core.capps.length == 0) {
+                temp.install.innerHTML = 'Installed';
+                window.tempit = 'true';
+                };
                 break;
                 };
+                //};
                 /*if(window.installed.dirs[h] == resp.categories[Name][0]) {
                 temp.install.innerHTML = 'Installed';
                 window.tempit = 'true';
@@ -196,18 +205,35 @@ for(var i=0; i < thisis[actT.x].resp.categories[Name].length; i++)
                 temp.install = document.createElement('div');
                 for(var h=0; h < window.installed.dirs.length; h++){
                 if(window.installed.dirs[h] == resp.categories[propName][0]) {
+                for(var l=0; l < core.capps.length; l++) {
+                if(resp.categories[propName][0] == core.capps[l]) {
+                temp.install.innerHTML = 'update';
+                temp.install.onclick = function(){thisis[actT.x].updateapp(propName, this.parentNode.children[1].innerHTML);};
+                } else {
+                temp.install.innerHTML = 'Installed';
+                window.tempit = 'true';
+                };
+                };
+                if(core.capps.length == 0) {
+                temp.install.innerHTML = 'Installed';
+                window.tempit = 'true';
+                };
+                break;
+                };
+                /*for(var h=0; h < window.installed.dirs.length; h++){
+                if(window.installed.dirs[h] == resp.categories[propName][0]) {
                 temp.install.innerHTML = 'Installed';
                 window.tempit = 'true';
                 break;
-                };
+                };*/
                 if(window.installed.dirs[h] != resp.categories[propName][0]) {
                 temp.install.innerHTML = 'Install';
-                temp.install.onclick = function(){ thisis[actT.x].installapp(this.parentNode.children[1].innerHTML);};
+                temp.install.onclick = function(){ thisis[actT.x].installapp(this.parentNode.children[1].innerHTML);this.parentNode.children[2].innerHTML="Installed";};
                 };
                 };
                 if(window.installed.dirs.length == 0) {
                 temp.install.innerHTML = 'Install';
-                temp.install.onclick = function(){ thisis[actT.x].installapp(this.parentNode.children[1].innerHTML);};
+                temp.install.onclick = function(){ thisis[actT.x].installapp(this.parentNode.children[1].innerHTML);this.parentNode.children[2].innerHTML="Installed";};
                 };
                 temp.name.innerHTML = resp.categories[propName][0];
                 temp.img.style.cssText = "height: 100%;position: relative;width: 75px;left: 0px;top: 0px;float: right;";
@@ -240,9 +266,10 @@ for(var propName in resp.categories) {
            install.open('GET', 'appstore/install.php?cat='+propName+'&app='+app+'&name='+core.user+'', true);
            install.onreadystatechange = function() {
         if(install.readyState==4) {
-        //alert(install.responseText);
         if(install.responseText == 'installed'){
-        alert('app installed!');
+        core.checkupdates();
+        //thisis[actT.x].catselect(propName);
+        MainTools.Notify('app installed!');
         delete window.installed;
         } else if(install.responseText == 'error') {
         alert('There was an error with installing');

@@ -23,7 +23,7 @@ ul li {
 	z-index: 2147487;
 }
 * {
-    font-family: arial;
+    font-family: monospace;
 }
 #menubar ul {
 	width: auto;

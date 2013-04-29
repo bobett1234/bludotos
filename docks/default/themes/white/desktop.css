@@ -6,6 +6,7 @@
     text-align: center;
     /*padding: 5px 5px 2px 5px;*/
     -webkit-transform-origin: 50% 100%;
+    -moz-transform-origin: 50% 100%;
     z-index:2147483;
     }
     #dock{
@@ -14,7 +15,7 @@
     padding: 0 20px;
     }
     #background {
-    background: hsla(0,0%,30%, 0.7);
+    background: rgba(76, 76, 76, 0.701961);
     box-shadow: 0px 1px 5px black inset;
     border: 3px solid white;
     //border-radius: 7px 7px 0 0;

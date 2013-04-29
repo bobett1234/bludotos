@@ -10,6 +10,7 @@ if ($zip->open('apps/'.$cat.'/'.$app.'/'.$app.'.blu') === TRUE) {
     $zip->close();
     //echo 'ok';
 } else {
+    echo 'apps/'.$cat.'/'.$app.'/'.$app.'.blu';
     echo 'failed';
 }
 mkdir('temp2');
@@ -19,6 +20,7 @@ if ($zip->open('../users/'.$name.'/sysapps/FileNet/apps/'.$app.'/'.$app.'.blu') 
     $zip->close();
     //echo 'ok';
 } else {
+    echo '../users/'.$name.'/sysapps/FileNet/apps/'.$app.'/'.$app.'.blu';
     echo 'failed';
 }
 unlink('temp/'.$app.'/prefs.php');
